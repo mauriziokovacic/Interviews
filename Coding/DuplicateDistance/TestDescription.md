@@ -2,7 +2,7 @@
 
 You are given an implementation of a function:
 
-    `int solution(std::vector<int>& A);`
+    int solution(std::vector<int>& A);
 
 which accepts as input a non-empty zero-indexed array A consisting of N integers. It returns the maximum distance between the first and last occurrence of an entry.
 
