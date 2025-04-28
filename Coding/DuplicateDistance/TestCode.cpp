@@ -15,8 +15,6 @@ int solution(std::vector<int>& A)
     // const is a bit more efficient than a non const
     const uint N = A.size();
 
-    int result = 0;
-
     // create a map with key = A[i] and value = (i,j),
     // with i and j being the index of the first and last occurrence respectively
     map_t map;
@@ -24,21 +22,23 @@ int solution(std::vector<int>& A)
     // iterate over the vector
     for (uint i = 0; i < N; ++i)
     {
-
+        int key = A[i];
+        int index = static_cast<int>(i);
         // if it is the first time I see A[i]
-        if (map.find(A[i]) == map.end())
+        // add the the pair (i,i) to the map
+        // otherwise update the second index of the pair
+        if (map.find(key) == map.end())
         {
-            // Add the the pair (i,i) to the map
-            map[A[i]] = value_t({ static_cast<int>(i), static_cast<int>(i) });
+            map[key] = value_t({index, index});
         }
         else
         {
-            // else update the second index of the pair
-            map[A[i]][1] = static_cast<int>(i);
+            map[key][1] = index;
         }
     }
 
     // iterate of the map
+    value_t result = 0;
     for (const auto& item : map)
     {
         // store the maximum element
