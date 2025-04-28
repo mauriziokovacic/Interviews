@@ -18,7 +18,7 @@ For example, given array A such that:
     A[5] = 6
     A[6] = 1
 ```
-the function returns 4.
+the function returns 4, because the first occurence of 6 is at index 1, its last occurence at index 5.
 
 Also, for given array A such that:
 ```
