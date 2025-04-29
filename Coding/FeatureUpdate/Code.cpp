@@ -23,11 +23,13 @@ struct compare
 
     bool operator()(const std::string& a, const std::string& b) const
     {
-        if (m_map->at(a) > m_map->at(b))
+	    const uint ca = m_map->at(a);
+	    const uint cb = m_map->at(b);
+        if (ca > cb)
         {
             return true;
         }
-        if (m_map->at(a) == m_map->at(b))
+        if (ca == cb)
         {
             return a < b;
         }
