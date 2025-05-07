@@ -10,8 +10,7 @@ You can assume you have a struct/class for the points and/or any suitable functi
 
 
 Follow up...
-- Assume the needs have changed and now you need a color
-    for each point. How would you modify the class and why?
+- Assume the needs have changed and now you need a color for each point. How would you modify the class and why?
 
 - Implement a function:
 
