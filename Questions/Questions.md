@@ -1,6 +1,6 @@
 #
 ## Question
-Explain the difference between “pass by value” and “pass by reference”. When would you use one over the other?
+Explain the difference between "_pass by value_" and "_pass by reference_". When would you use one over the other?
 
 ## Answer
 
