@@ -45,7 +45,11 @@ d. dynamic_cast
 e. C-style cast
 
 ## Answer
-
+a. Used for compile-time type conversions. It can convert between related types (e.g., base and derived classes) and perform numeric conversions. It does not perform runtime checks.
+b. Used to add or remove the `const` qualifier from a variable. It allows modifying a const object, but should be used with caution. Modifying a truly const object after removing const is undefined behavior.
+c. Used for low-level type conversions. It can convert any pointer type to any other pointer type, but it does not check for type safety. It should be used with caution as it can lead to undefined behavior if misused.
+d. Used for safe downcasting in class hierarchies. It checks at runtime if the cast is valid (i.e., if the object is of the target type). If the cast fails, it returns `nullptr` for pointer types or throws an exception for references.
+e. A legacy casting method that combines the functionality of static_cast, const_cast, and reinterpret_cast. It is less safe and harder to read compared to C++-style casts, as it does not specify the intent of the cast.
 
 #
 ## Question
@@ -81,6 +85,13 @@ When a virtual function is called on an object, the program looks up the vtable 
 What are pure virtual methods? What are they used for?
 
 ## Answer
+Pure virtual methods in C++ are methods declared within a base class that must be overridden by any derived class.
+They are specified by assigning = 0 to the method declaration in the base class.
+A class containing at least one pure virtual method is considered an abstract class and cannot be instantiated directly.
+
+They are used to create abstract base classes that serve as blueprints for other classes.
+Pure virtual methods define a contract that derived classes must fulfill, ensuring they implement specific behavior.
+They enable runtime polymorphism, allowing derived classes to provide their own implementation of the method.
 
 
 #
@@ -88,11 +99,13 @@ What are pure virtual methods? What are they used for?
 What are the dangers of calling virtual functions in constructors and destructors?
 
 ## Answer
+Calling virtual functions in constructors and destructors is dangerous because uring a constructor's execution, the object's type is considered to be the type of the class whose constructor is currently running, not the derived class.
+This means that if a virtual function is called in a constructor, the base class version of the function will be executed, not the derived class version. This can lead to unexpected behavior and bugs.
 
 
 #
 ## Question
-What is the output of Func() and why? What is wrong with this code?
+What is the output of `Func()` and why? What is wrong with this code?
 ```
 class Object
 {
@@ -121,6 +134,18 @@ void Func()
 ```
 
 ## Answer
+The output of `Func()` will be:
+```
+I'm a Thing!
+I'm a Thing!
+```
+because `pA` is a pointer to an object of type `Thing`, and `pB` is a pointer to the same object, casted to `Thing*`.
+Both pointers will call the `Print()` method of the `Thing` class, which overrides the `Print()` method of the `Object` class.
+
+There are a few issues with this code:
+- `ObjectManager::GetInstance()` assumes the instance is always valid
+- `g_thingCollection` is assumed to be always valid
+- `Object` class has no virtual destructor, which can lead to resource leaks or undefined behavior when deleting derived class objects through base class pointers.
 
 
 #
@@ -174,6 +199,13 @@ void Thing::B( const char * pFileName )
 ```
 
 ## Answer
+Function `A` allocates 1024 bytes on the heap using `new char[1024]`. Function `B` allocates 1024 bytes on the stack using a local array.
+The memory allocated in `A` must be explicitly deallocated using `delete[]`, while the memory allocated in `B` is automatically deallocated when the function returns.
+- Stack memory is generally faster to allocate and deallocate than heap memory.
+- Stack memory is limited in size, while heap memory can be larger but requires manual management.
+- Function `A` may cause a memory leak if `delete[]` is not called. For instance, if an exception occurs before the `delete[]` statement, the allocated memory will not be freed.
+- Function `B` may cause cause a stack overflow exception if the stack cannot accommodate the size of the array, especially if this function is called recursively or in a loop.
+- Function `A` incurs the overhead of dynamic memory allocation and deallocation, while function `B` does not have this overhead.
 
 
 #
@@ -181,6 +213,11 @@ void Thing::B( const char * pFileName )
 What is data alignment? What's the purpose of it?
 
 ## Answer
+Data alignment refers to arranging data in memory according to specific boundaries (e.g., 2, 4, 8, or 16 bytes) to match the architecture's requirements.
+This ensures that data is stored at memory addresses that are multiples of the data type's size or alignment requirement.
+
+The purpose of data alignment is to improve performance and access speed.
+Misaligned data can lead to inefficient memory access, as the CPU may need to perform multiple memory accesses to read or write the data, resulting in slower performance.
 
 
 #
@@ -188,6 +225,10 @@ What is data alignment? What's the purpose of it?
 Why is unordered memory access slower than sequential access?
 
 ## Answer
+Unordered memory access is slower than sequential access primarily due to cache locality and memory prefetching.
+Sequential memory access takes advantage of spatial locality, where adjacent memory locations are loaded into the cache together.
+This reduces the number of expensive main memory accesses.
+In contrast, unordered access often results in cache misses, as the accessed memory locations are scattered and not already in the cache.
 
 
 #
@@ -195,6 +236,8 @@ Why is unordered memory access slower than sequential access?
 What does the C/C++ volatile keyword do? When would you use it?
 
 ## Answer
+The volatile keyword in C/C++ is used to indicate that a variable's value can be changed at any time by external factors outside the program's control, such as hardware or another thread.
+It prevents the compiler from optimizing code in a way that assumes the variable's value remains constant between accesses.
 
 
 #
