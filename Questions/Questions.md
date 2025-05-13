@@ -281,6 +281,42 @@ void Transform( const Matrix & _transform )
 ```
 
 ## Answer
+- struct `Foo` is not size optimap due to potential padding. The order of members can be rearranged to minimize padding and improve cache locality.
+A possible improvement rearranging its members as follows:
+```
+Foo* nextItem;
+const char* name;
+float coords[3];
+int someValue;
+bool isInitialized;
+bool someFlag;
+```
+- The `Init()` function creates 1000 instances of `Foo` and links them together. This can lead to memory fragmentation and performance issues.
+A possible improvement could be:
+```
+std::vector<Foo> fooList(1000);
+Foo* previous = nullptr;
+
+void Init()
+{
+	for ( int i = 0; i < 1000; ++i )
+	{
+        fooList[i] = Foo(previous);
+        previous = &fooList[i];
+	}
+}
+```
+- The `Transform()` function iterates through the linked list of `Foo` objects, which can be inefficient due to pointer chasing.
+A possible improvement could be:
+```
+void Transform( const Matrix & _transform )
+{
+	for (std::size_t i = 0; i < fooList.size(); ++i)
+	{
+		_transform.ApplyTo(fooList[i]);
+	}
+}
+```
 
 
 #
@@ -288,6 +324,22 @@ void Transform( const Matrix & _transform )
 List things to be aware of when using templates
 
 ## Answer
+Here are some key points to be aware of when using templates in C++:
+1.	Code Bloat: Templates generate separate code for each type they are instantiated with, which can lead to larger binary sizes.
+2.	Compilation Time: Templates can significantly increase compilation time due to the generation of multiple versions of the same code.
+3.	Error Messages: Errors in template code can result in long and hard-to-read compiler error messages, especially for deeply nested templates.
+4.	Type Constraints: Templates do not enforce type constraints directly. If a type does not support the required operations, errors will occur during instantiation.
+5.	Specialization: Be cautious when using template specialization. It can make the code harder to read and maintain.
+6.	Linker Errors: Templates can lead to linker errors if definitions are not properly included in the translation units where they are instantiated.
+7.	Debugging: Debugging template code can be challenging due to the complexity of the generated code.
+8.	Overhead: While templates are powerful, they can introduce runtime overhead if not used carefully, especially with non-trivial instantiations.
+9.	Explicit Instantiation: Use explicit instantiation to reduce code bloat and improve compile times when you know the specific types you need.
+10.	SFINAE (Substitution Failure Is Not An Error): Understand and use SFINAE or concepts (in C++20) to constrain template parameters and improve error diagnostics.
+11.	Default Arguments: Templates can have default arguments, but they should be used judiciously to avoid confusion.
+12.	Template Recursion: Be cautious with recursive templates, as they can lead to deep instantiation chains and potential stack overflows.
+13.	Inline Definitions: Template definitions must be in the header file or explicitly instantiated in a source file to avoid linker errors.
+14.	Compatibility: Ensure that the types used with templates are compatible with the operations performed within the template.
+15.	Concepts (C++20): Use concepts to define constraints on template parameters, making the code more readable and error messages more meaningful.
 
 
 #
@@ -295,6 +347,22 @@ List things to be aware of when using templates
 Give good uses of C++ templates
 
 ## Answer
+Here are some good uses of C++ templates:
+1.	Generic Containers: Templates are widely used to create generic containers like `std::vector`, `std::list`, `std::map`, and `std::set` in the Standard Template Library (STL). These containers can store any data type without duplicating code.
+2.	Algorithms: Templates allow the creation of generic algorithms, such as `std::sort`, `std::find`, and `std::accumulate`, which work with any container or data type that satisfies the required interface.
+3.	Type-Safe Code: Templates enable type-safe code by allowing the compiler to enforce type correctness at compile time, reducing runtime errors.
+4.	Custom Data Structures: Templates are ideal for implementing custom data structures like linked lists, binary trees, and hash tables that can work with any data type.
+5.	Mathematical Libraries: Templates are useful for creating mathematical libraries that work with different numeric types (e.g., `int`, `float`, `double`) or even user-defined types.
+6.	Policy-Based Design: Templates can be used to implement policy-based design, where behavior is customized by passing policy classes as template parameters.
+7.	Compile-Time Computation: Templates can perform computations at compile time using techniques like template metaprogramming, reducing runtime overhead.
+8.	Code Reusability: Templates promote code reusability by allowing the same code to work with different data types, reducing duplication and maintenance effort.
+9.	Type Traits and Metaprogramming: Templates are used in type traits (e.g., `std::is_integral`, `std::is_pointer`) to inspect and manipulate types at compile time.
+10.	Function Overloading: Function templates allow the creation of generic functions that can operate on different types without writing multiple overloads.
+11.	Smart Pointers: Templates are used to implement smart pointers like `std::unique_ptr`, `std::shared_ptr`, and `std::weak_ptr`, which manage memory for any type.
+12.	Custom Allocators: Templates allow the creation of custom memory allocators that can be used with STL containers or other data structures.
+13.	Cross-Type Operations: Templates enable operations between different types, such as matrix multiplication or vector operations, where the types of elements may vary.
+14.	Static Polymorphism: Templates enable static polymorphism through the Curiously Recurring Template Pattern (CRTP), which avoids the overhead of virtual function calls.
+15.	Unit Testing: Templates can be used to create test utilities that work with multiple data types, making it easier to test generic code.
 
 
 #
@@ -376,6 +444,9 @@ for (i = 0; i <= count; ++i)
 ```
 
 ## Answer
+The loop will execute 45 times.
+The value of `count` is 150, and when multiplied by 2, it becomes 300, but due to overflow it will become 44.
+The variable i is initialized to 50, but the for loop will set it to 0 and increment it until it reaches 44, resulting in 45 iterations.
 
 
 #
@@ -396,6 +467,19 @@ int Func( int n )
 ```
 
 ## Answer
+```
+int Func( int n )
+{
+	while(n > 1)
+    {
+        n *= --n;
+    }
+    return n;
+}
+```
+ The non-recursive version eliminates the overhead of function calls, making it faster.
+ It uses constant memory and avoids stack overflow issues for large values of n.
+ The recursive version can lead to stack overflow for large `n` due to deep recursion.
 
 
 #
@@ -448,6 +532,8 @@ int GetNumPixels( const char * filename )
 What is the distinctiveness of a constructor with a single parameter?
 
 ## Answer
+A constructor with a single parameter in C++ is distinctive because it can be used for implicit type conversions, unless explicitly marked with the `explicit` keyword.
+This means that the constructor can be invoked automatically to convert an object of the parameter's type into an object of the class.
 
 
 #
@@ -455,6 +541,8 @@ What is the distinctiveness of a constructor with a single parameter?
 Explain the C++ explicit keyword
 
 ## Answer
+The explicit keyword in C++ is used to prevent implicit conversions or unintended type casting when a constructor or conversion operator is invoked.
+It ensures that the constructor or operator can only be called explicitly, improving code clarity and reducing the risk of subtle bugs.
 
 
 #
@@ -462,6 +550,10 @@ Explain the C++ explicit keyword
 What does the C++ mutable keyword do? When would you use it?
 
 ## Answer
+The `mutable` keyword in C++ allows a non-static data member of a class to be modified even if it is part of an object that is declared as `const`.
+Normally, `const` objects prevent any modification of their members, but `mutable` provides an exception to this rule.
+You would use `mutable` when you need to modify a specific member variable in a `const` context, such as within a `const` member function.
+This is typically used for caching, logging, or other operations that do not conceptually alter the logical state of the object.
 
 
 #
@@ -469,11 +561,13 @@ What does the C++ mutable keyword do? When would you use it?
 What is reflection? What are the usages of it?
 
 ## Answer
+Reflection is the ability of a program to inspect, analyze, and modify its own structure, behavior, and properties at runtime.
+It allows a program to examine types, methods, fields, and other metadata dynamically, without knowing them at compile time.
 
 
 #
 ## Question
-The “mutable” keyword appointed to a class data member allows us to change the content of that data from otherwise const tagged functions.
+The `mutable` keyword appointed to a class data member allows us to change the content of that data from otherwise const tagged functions.
 This might suggest some faults in the class design but can you picture a scenario where this won’t be the case?
 
 ## Answer
