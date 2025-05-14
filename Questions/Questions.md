@@ -394,6 +394,13 @@ bool EnemyCanSeePlayer()
 ```
 
 ## Answer
+```
+bool EnemyCanSeePlayer()
+{
+	Vec3 dir = (GetPlayerPosition() - GetEnemyPosition()).GetNormalized();
+    return GetEnemySightDir().DotProduct(dir) >= 0.0f;
+}
+```
 
 
 #
@@ -413,20 +420,79 @@ void BuildCameraMatrix( const Vec3 & camPos, const Vec3 & targetPos, Matrix & ca
 ## Question
 Implement and document this C function that reverses a string:
 ```
-void ReverseString(const char * inStr, char * outStr)
+void ReverseString(const char* inStr, char* outStr)
 {
 	...
 }
 ```
 
 ## Answer
+```
+void ReverseString(const char* inStr, char* outStr)
+{
+    // Check for null pointers
+    if (inStr == NULL || outStr == NULL)
+    {
+        return;
+    }
 
+    // Get the length of the input string
+    size_t length = strlen(inStr);
+
+    // Reverse the string
+    for (size_t i = 0; i < length; ++i)
+    {
+        outStr[i] = inStr[length - i - 1];
+    }
+
+    // Null-terminate the reversed string
+    outStr[length] = '\0';
+}
+```
 
 #
 ## Question
-Let say you have random behaviors and/or crashes in your game when doing the same specific action (firing your gun for example). What could cause such a non-deterministic bug? How do you proceed to debug it?
+Let say you have random behaviors and/or crashes in your game when doing the same specific action (_Ex.: firing your gun_).
+What could cause such a non-deterministic bug? How do you proceed to debug it?
 
 ## Answer
+Possible causes can be found in:
+1. Race Conditions: Multiple threads accessing shared resources without proper synchronization.
+2. Uninitialized Variables: Using variables without initializing them can lead to undefined behavior.
+3. Memory Corruption: Issues like buffer overflows, dangling pointers, or accessing freed memory.
+4. Floating-Point Precision: Small differences in floating-point calculations can accumulate and cause inconsistencies.
+5. Undefined Behavior: Violating language rules (e.g., out-of-bounds array access) can lead to unpredictable results.
+6. External Dependencies: Relying on external systems (e.g., hardware, network) that behave inconsistently.
+7. Random Number Generators: Improper seeding or usage of random number generators.
+8. Concurrency Issues: Deadlocks, livelocks, or improper thread synchronization.
+9. Event Timing: Events processed in an unexpected order due to timing differences.
+
+Possible debugging steps:
+1. Reproduce the Issue:
+    - Try to consistently reproduce the bug by isolating the specific action or sequence of actions causing it.
+2. Enable Debugging Tools:
+    - Use tools like AddressSanitizer, Valgrind, or Visual Studio's built-in debugger to detect memory issues.
+    - Enable thread sanitizers to catch race conditions.
+3. Log Everything:
+    - Add detailed logging around the problematic code to capture the state of variables, threads, and events.
+4. Check for Uninitialized Variables:
+    - Use static analysis tools or enable compiler warnings (-Wall -Wextra in GCC/Clang) to catch uninitialized variables.
+5. Analyze Threading Code:
+    - Review thread synchronization mechanisms (e.g., mutexes, locks) and ensure proper usage.
+6. Use Breakpoints:
+    - Set breakpoints in the debugger to step through the code and observe the program's behavior.
+7. Simplify the Problem:
+    - Comment out unrelated code to narrow down the scope of the issue.
+8. Test on Different Systems:
+    - Run the game on different hardware or operating systems to identify platform-specific issues.
+9. Check Random Number Generators:
+    - Ensure random number generators are properly seeded and used consistently.
+10. Review Recent Changes:
+    - If the bug is new, review recent code changes for potential causes.
+11. Stress Testing:
+    - Simulate high load or unusual conditions to trigger the bug more reliably.
+12. Consult Logs and Crash Dumps:
+    - Analyze logs and crash dumps to identify patterns or specific points of failure.
 
 
 #
@@ -477,9 +543,9 @@ int Func( int n )
     return n;
 }
 ```
- The non-recursive version eliminates the overhead of function calls, making it faster.
- It uses constant memory and avoids stack overflow issues for large values of n.
- The recursive version can lead to stack overflow for large `n` due to deep recursion.
+The non-recursive version eliminates the overhead of function calls, making it faster.
+It uses constant memory and avoids stack overflow issues for large values of n.
+The recursive version can lead to stack overflow for large `n` due to deep recursion.
 
 
 #
@@ -525,6 +591,7 @@ int GetNumPixels( const char * filename )
 ```
 
 ## Answer
+The purpose of `Func()` is to reverse the byte order of a 32-bit integer, effectively converting it between little-endian and big-endian formats.
 
 
 #
@@ -571,6 +638,14 @@ The `mutable` keyword appointed to a class data member allows us to change the c
 This might suggest some faults in the class design but can you picture a scenario where this won’t be the case?
 
 ## Answer
+There are scenarios where using the mutable keyword is justified and does not indicate a fault in the class design.
+These scenarios typically involve operations that do not conceptually alter the logical state of the object, even though they modify some internal data.
+Here are a few examples:
+1. Caching: When a class needs to cache the result of an expensive computation, the cache can be marked as `mutable`.
+This allows the cache to be updated in a `const` member function without violating the `const` contract.
+2. Logging: If a class needs to log information for debugging or auditing purposes, the logging mechanism can be marked as `mutable`.
+This ensures that logging can occur even in `const` member functions.
+3.	Reference Counting: In smart pointers or other resource management classes, reference counts are often marked as `mutable` to allow modification in `const` operations like copying or assignment.
 
 
 #
@@ -630,6 +705,19 @@ public:
 Please describe a way to deny calls to that with `void *` arguments [i.e. `void *ptr; Look_At_Pointer(ptr)` ]
 
 ## Answer
+```
+#include <type_traits>
+
+class Stuff
+{
+public:
+    template <typename T, typename = std::enable_if_t<!std::is_same_v<T, void>>>
+    void Look_At_Pointer(T* ptr)
+    {
+        // staring at ptr...
+    }
+};
+```
 
 
 #
