@@ -439,6 +439,15 @@ void ReverseString(const char* inStr, char* outStr)
     // Get the length of the input string
     size_t length = strlen(inStr);
 
+    /*
+    // Alternative way to calculate length without using strlen
+    size_t length = 0;
+    while (inStr[length] != '\0')
+    {
+        ++length;
+    }
+    +/
+
     // Reverse the string
     for (size_t i = 0; i < length; ++i)
     {
@@ -686,6 +695,40 @@ Consider 3 objects A, B and C with the following relationship:
 Please model the above dependencies using raw or smart pointers.
 
 ## Answer
+```
+class A;
+class B;
+class C;
+
+class A
+{
+public:
+    A(B* b) : m_B(b) {}
+
+private:
+    B* m_B; // Raw pointer to B
+};
+
+class B
+{
+public:
+    B() : m_A(new A(this)) {} // B owns A
+    B(A* a) : m_A(a) {} // B can also take ownership of A
+
+private:
+    std::shared_ptr<A> m_A; // B owns A
+};
+
+class C
+{
+public:
+    C() : m_A(new A(m_B)) {} // C also owns A
+    C(A* a) : m_A(a) {} // C can also take ownership of A
+
+private:
+    std::shared_ptr<A> m_A; // C owns A
+};
+```
 
 
 #
@@ -797,6 +840,93 @@ Please propose an implementation of those requirements.
 What camera parameters would you choose to expose so that design can tweak that behaviour.
 
 ## Answer
+```
+struct Vec3
+{
+    // ...
+
+    float x, y, z;
+};
+
+class AbstractCurve
+{
+public:
+    // ...
+
+    float GetValue(float t) const = 0;
+};
+
+
+class LinearCurve : public AbstractCurve
+{
+public:
+    // ...
+
+    LinearCurve(float begin, float end) : m_Begin(begin), m_End(end) {}
+
+    float GetValue(float t) const override
+    {
+        return m_Begin + (m_End - m_Begin) * t;
+    }
+
+protected:
+    float m_Begin;
+    float m_End;
+};
+
+
+class GenericCurve : public AbstractCurve
+{
+public:
+    // ...
+
+    float GetValue(float t) const override
+    {
+        // ...
+    }
+};
+
+
+struct CameraParams
+{
+    float minDistance;
+    float maxDistance;
+
+    float minPitchInDegrees;
+    float maxPitchInDegrees;
+
+    float minYawInDegrees;
+    float maxYawInDegrees;
+};
+
+
+class Camera
+{
+public:
+    // ...
+
+    void LookAt(const Vec3& target, float yawInDegrees, float pitchInDegrees)
+    {
+        static constexpr float deg2rad = std::numbers::pi / 180.0f;
+        static constexpr float rad2deg = 180.0f / std::numbers::pi;
+
+        const float yaw = std::clamp(yawInDegrees, m_Params.minYawInDegrees, m_Params.maxYawInDegrees) * deg2rad;
+        const float pitch = std::clamp(pitchInDegrees, m_Params.minPitchInDegrees, m_Params.maxPitchIDegrees) * deg2rad;
+
+        const float distance = m_Curve->GetValue(std::abs(pitch * rad2deg));
+
+        m_Position.x = target.x + distance * std::cos(yaw) * std::sin(pitch);
+        m_Position.y = target.y + distance * std::sin(yaw) * std::sin(pitch);
+        m_Position.z = target.z + distance * std::cos(pitch);
+    }
+
+protected:
+    std::weak_ptr<Curve> m_Curve;
+    CameraParams m_Params;
+    Vec3 m_Position;
+};
+
+```
 
 
 #
@@ -813,7 +943,7 @@ Please propose a possible implementation for this problem.
 #
 ## Question
 Consider a character that can be moved on some game map by choosing a destination with the mouse.
-When navigating, the character can select from one of the following actions - walk, run or jump over obstacles.
+When navigating, the character can select from one of the following actions: walk, run or jump over obstacles.
 The pathfinder will compute a path from the current location to the desired one and what remains for us is to determine the appropriate moving action (e.g. can -run- in an open environment, but has to transition to just -walk- when traversing a narrow ledge).
 - Please describe a high level approach to select the 'natural' chain of actions while navigating some path.
 - The character can also attack, thus needing to do a transition from his current state. Actually, we realised that he can do all sorts of things and there’s an ever growing number of states and transitions. Please suggest an approach to avoid having to handle a great number of states and transitions.
@@ -928,6 +1058,7 @@ int main()
 ```
 
 ## Answer
+`4 4 4 4`
 
 
 #
@@ -954,6 +1085,12 @@ int main()
 ```
 
 ## Answer
+```
+0
+5
+_address of memory pointed by c_
+_address of memory pointed by d_
+```
 
 
 #
@@ -1002,6 +1139,7 @@ int main()
 ```
 
 ## Answer
+`4 0 0 4`
 
 
 #
@@ -1038,8 +1176,17 @@ int main()
 }
 ```
 
+## Answer
+```
+Base::Test
+Derived::Test
+Base::Test
+```
 
-Q. Describe what it's going to happen in the following code.
+
+#
+## Question
+Describe what it's going to happen in the following code.
 ```
 class A
 {
@@ -1059,6 +1206,8 @@ int main()
 ```
 
 ## Answer
+The code will fail to compile because the copy constructor of class `A` is deleted. 
+When trying to create an object `b` as a copy of `a`, the compiler will generate an error indicating that the copy constructor is not available.
 
 
 #
@@ -1085,6 +1234,7 @@ int main()
 ```
 
 ## Answer
+The code will not compile because `GetAnObject()` returns a temporary object, and `refToObject` is a non-const reference to that temporary object.
 
 
 #
@@ -1110,6 +1260,8 @@ int main()
 ```
 
 ## Answer
+The code will compile and run without errors.
+The temporary object returned by `GetAnObject()` will be bound to the `const Object& refToObject`.
 
 
 #
@@ -1136,6 +1288,8 @@ int main()
 ```
 
 ## Answer
+The code will compile and run without errors.
+The temporary returned by GetAnObject() is bound to the rvalue reference rvalueRef, and its lifetime is extended to the end of the main() function.
 
 
 #
@@ -1165,11 +1319,13 @@ int main()
 ```
 
 ## Answer
+The code will compile.
+However, it will cause a runtime error due to dereferencing a null pointer `d` when trying to assign `54` to it.
 
 
 #
 ## Question
-Given the Object class belowm and taking into account the RVO (Return Value Optimization), describe what it is going to be printed out at run-time.
+Given the Object class below and taking into account the RVO (Return Value Optimization), describe what it is going to be printed out at run-time.
 ```
 #include <iostream>
 
@@ -1201,6 +1357,13 @@ int main()
 ```
 
 ## Answer
+```
+def ctor
+def ctor
+mov assign
+dtor
+dtor
+ ```
 
 
 #
@@ -1237,11 +1400,20 @@ int main()
 ```
 
 ## Answer
+```
+def ctor
+mov ctor
+dtor
+def ctor
+mov assign
+dtor
+dtor
+```
 
 
 #
 ## Question
-Suppose Vector is a class representing a position in 3D space defined in the code below. What does the test variable represent?
+Suppose `Vector` is a class representing a position in 3D space defined in the code below. What does the `test` variable represent?
 ```
 #include <cmath>
 #include <iostream>
@@ -1298,13 +1470,14 @@ int main()
 ```
 
 ## Answer
+The `test` variable represents the unit direction vector pointing from `enemyPosition` to `playerPosition`.
 
 
 #
 ## Question
-Assume a class Vector, representing a 3D coordinate in space, is fully implemented.
+Assume a class `Vector`, representing a 3D coordinate in space, is fully implemented.
 We have a game in which all entities have a super-power: they can see 180° in front of them.
-The Vector representing entities' view (i.e. where their head is turned to) is called sight.
+The `Vector` representing entities' view (i.e. where their head is turned to) is called `sight`.
 We want to find the most efficient way to understand if the enemy can see the player.
 The data you have access to is represented by these variables:
 ```
@@ -1377,6 +1550,7 @@ bool canEnemySeeThePlayer = Test(enemySight, enemyToPlayer);
 ```
 
 ## Answer
+A
 
 
 #
@@ -1395,12 +1569,13 @@ Which one of the following design patterns will you consider to use?
 - Strategy
 
 ## Answer
+Observer
 
 
 #
 ## Question
-Suppose it exists a class called InputHandler, used to handle the player's inputs during the game.
-Among other things, the class has a handleInput() function which is used to select an action whenever a button is pressed.
+Suppose it exists a class called `InputHandler`, used to handle the player's inputs during the game.
+Among other things, the class has a `handleInput()` function which is used to select an action whenever a button is pressed.
 ```
 class InputHandler
 {
@@ -1426,6 +1601,7 @@ Which one of the following design pattern would you apply to improve the input h
 - Visitor pattern
 
 ## Answer
+Command pattern
 
 
 #
@@ -1455,6 +1631,7 @@ int main()
 ```
 
 ## Answer
+`1 2 2 4`
 
 
 #
@@ -1485,6 +1662,7 @@ int main()
 ```
 
 ## Answer
+`0 0 0 0 0 1 1 1  `
 
 
 #
@@ -1522,6 +1700,12 @@ int main()
 ```
 
 ## Answer
+```
+ctor A
+ctor B
+dtor B
+dtor A
+ ```
 
 
 #
@@ -1559,6 +1743,11 @@ int main()
 ```
 
 ## Answer
+```
+ctor A
+ctor B
+dtor A
+```
 
 
 #
@@ -1567,7 +1756,8 @@ Suppose you have a function:
 ```
     static int f(int value)
 ```
-processing the input value the way showed in the code below. What is going to be printed out at runtime?
+processing the input value the way showed in the code below.
+What is going to be printed out at runtime?
 ```
 #include <iostream>
 
@@ -1589,17 +1779,18 @@ int main()
 ```
 
 ## Answer
+`1 1 2  `
 
 
 #
 ## Question
-Given the following String class and its defined operations, list the String operations that are called from function Test() in the order they are called.
-A Assume the four unimplemented functions are implemented elsewhere.
+Given the following `String` class and its defined operations, list the `String` operations that are called from function `Test()` in the order they are called.
+Assume the four unimplemented functions are implemented elsewhere.
 ```
 class String 
 { 
 public:
-    String() 	  { m_str = new char[1]; *m_str = 0; }
+    String() { m_str = new char[1]; *m_str = 0; }
     ~String();
     String(const char* str);
     String(const String& other);
@@ -1623,11 +1814,21 @@ void Test()
 ```
 
 ## Answer
+1. Calls `String(const char* str)` constructor
+2. Calls `String(const String& other)` constructor to copy `str3` into `str1` in `Func`
+3. Calls `String()` constructor
+4. Calls `operator=(const String& other)`
+5. Calls `String(const String& other)` constructor for return value from `Func`
+6. Calls `~String()` for `str1`
+7. Calls `~String()` for `str2`
+8. Calls `operator=(const String& other)` to copy the return value into `str3`
+9. Calls `~String()` for `str3`
 
 
 #
 ## Question
-This function looks fine but there is a performance problem with it. What is it and what ways are there round it?
+This function looks fine but there is a performance problem with it.
+What is it and what ways are there round it?
 ```
 void addToAll(vec3* array, vec3* toAdd, u32 num)
 {
@@ -1642,6 +1843,19 @@ void addToAll(vec3* array, vec3* toAdd, u32 num)
 ```
 
 ## Answer
+The main performance problem with this function is that it does not take advantage of data locality or vectorization, and it increments the pointer in each iteration, which can be less clear and less efficient for some compilers.
+A possible is the following:
+```
+void addToAll(const vec3* array, const vec3* toAdd, cost u32 num)
+{
+    for (int i = 0; i < num; ++i)
+    {
+        array[i].x += toAdd->x;
+        array[i].y += toAdd->y;
+        array[i].z += toAdd->z;
+    }
+}
+```
 
 
 #
@@ -1672,6 +1886,7 @@ int foo(int val)
 ```
 
 ## Answer
+This function counts the number of set bits (bits with value 1) in the integer `val`.
 
 
 #
@@ -2003,7 +2218,8 @@ void Insert(Node* insertAfter, Node* nodeToInsert)
 
 #
 ## Question
-Use C# or C++ to show the structure of an element of a sorted binary tree in which each element contains a single character. Describe briefly what any reference point to.
+Use C# or C++ to show the structure of an element of a sorted binary tree in which each element contains a single character.
+Describe briefly what any reference point to.
 
 ## Answer
 
