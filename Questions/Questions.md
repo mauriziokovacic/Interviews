@@ -1997,11 +1997,29 @@ The number one is contained in both lists, but it should appear only once in the
 ```
 
 ## Answer
+```
+#include <vector>
+#include <unordered_set>
+
+// Combines two lists of unique numbers into a third list without duplicates.
+std::vector<int> CombineUnique(const std::vector<int>& A, const std::vector<int>& B)
+{
+    std::unordered_set<int> result;
+    result.insert(A.begin(), A.end());
+    result.insert(B.begin(), B.end());
+
+    // Convert the set back to a vector
+    return std::vector<int>(result.begin(), result.end());
+}
+```
+
+A more generic approach would be to sort both lists and then merge them, but this is less efficient than using a hash set for uniqueness.
 
 
 #
 ## Question
-What is the size of an instance of this class? How would you go about making it smaller?
+What is the size of an instance of this class?
+How would you go about making it smaller?
 ```
 typedef struct
 {	
@@ -2043,6 +2061,38 @@ public:
 ```
 
 ## Answer
+Assuming a 32-bit system, the size of the triangle class is 240 bytes.
+By rearranging the variables in the following manner:
+```
+class triangle
+{
+public:
+    triangle();
+    
+    triangle   *m_adjacentWorldPolys[3];
+    triangle   *m_adjacentUVPolys[3];
+    
+    vector3  m_coords[3];
+    vector3  m_vertNormals[3];
+    vector3  m_colour[3];
+    vector3  m_faceNormal;
+    vector3  m_midpoint;
+    vector2  m_textureUVs[3];
+    vector2  m_lightmapUVs[3];
+        
+
+    unsigned int   m_materialID;
+    unsigned int   m_polygonID;
+    unsigned int   m_objectID;
+    unsigned int   m_lodID;
+    
+    unsigned short m_lightmapID;
+    unsigned char  m_adjacentWorldEdges[6];
+    unsigned char  m_isTrans;
+    unsigned char  m_lodLevel;
+};
+```
+we can reduce the size of the class to 232 bytes.
 
 
 #
