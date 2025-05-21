@@ -367,7 +367,7 @@ Here are some good uses of C++ templates:
 
 #
 ## Question
-Given the following code, implement the function EnemyCanSeePlayer(). Assume that the Enemy should be able to see the Player if the player is in the 180 degree cone in front of the Enemy:
+Given the following code, implement the function `EnemyCanSeePlayer()`. Assume that the Enemy should be able to see the Player if the player is in the 180 degree cone in front of the Enemy:
 ```
 struct Vec3
 {
@@ -953,7 +953,7 @@ protected:
 
 #
 ## Question
-Given a large 2d game map we would like to pathfind our way between any 2 points.
+Given a large 2D game map we would like to pathfind our way between any 2 points.
 For this scenario we will use a grid to partition the space, each cell being either free or blocked by some collision box.
 Also we would like to consider dynamic moving obstacles (like other moving characters) that would need to be avoided.
 
@@ -1331,7 +1331,7 @@ int main()
 
 ## Answer
 The code will compile and run without errors.
-The temporary returned by GetAnObject() is bound to the rvalue reference rvalueRef, and its lifetime is extended to the end of the main() function.
+The temporary returned by `GetAnObject()` is bound to the rvalue reference rvalueRef, and its lifetime is extended to the end of the `main()` function.
 
 
 #
@@ -1518,7 +1518,7 @@ The `test` variable represents the unit direction vector pointing from `enemyPos
 #
 ## Question
 Assume a class `Vector`, representing a 3D coordinate in space, is fully implemented.
-We have a game in which all entities have a super-power: they can see 180° in front of them.
+We have a game in which all entities have a super-power: they can see 180Â° in front of them.
 The `Vector` representing entities' view (i.e. where their head is turned to) is called `sight`.
 We want to find the most efficient way to understand if the enemy can see the player.
 The data you have access to is represented by these variables:
