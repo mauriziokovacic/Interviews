@@ -182,7 +182,7 @@ Explain the memory usage of these two functions, and any side effects caused by 
 void Thing::A( const char * pFileName )
 {
 	char * pFullPath = new char[1024];
-	sprintf( pFullPath, files/%s, pFileName );
+	sprintf( pFullPath, "files/%s", pFileName );
   
 	m_Texture = new Texture( pFullPath );
 
@@ -192,7 +192,7 @@ void Thing::A( const char * pFileName )
 void Thing::B( const char * pFileName )
 {
 	char FullPath[1024];
-	sprintf( FullPath, files/%s, pFileName );
+	sprintf( FullPath, "files/%s", pFileName );
   
 	m_Texture = new Texture( FullPath );
 }
@@ -407,13 +407,35 @@ bool EnemyCanSeePlayer()
 ## Question
 Given a 3D world where Y is the up axis, write a function that builds a matrix (right-handed, Matrix struct definition is up to you) for placing a camera, looking at a target world position along its local Z axis:
 ```
-void BuildCameraMatrix( const Vec3 & camPos, const Vec3 & targetPos, Matrix & camMat )
+void BuildCameraMatrix(const Vec3 & camPos, const Vec3 & targetPos, Matrix & camMat)
 {
 	...
 }
 ```
 
 ## Answer
+```
+struct Matrix
+{
+    Vec3 forward;
+    Vec3 up;
+    Vec3 right;
+    Vec3 position;
+};
+
+
+void BuildCameraMatrix(const Vec3 & camPos, const Vec3 & targetPos, Matrix & camMat)
+{
+    Vec3 forward = (camPos - targetPos).Normalized();
+    Vec3 right = Vec3(0.0f, 1.0f, 0.0f).CrossProduct(forward).Normalized();
+    Vec3 up = forward.CrossProduct(right).Normalized();
+
+    camMat.right = right;
+    camMat.up = up;
+    camMat.forward = forward;
+    camMat.position = camPos;
+}
+```
 
 
 #
@@ -644,7 +666,7 @@ It allows a program to examine types, methods, fields, and other metadata dynami
 #
 ## Question
 The `mutable` keyword appointed to a class data member allows us to change the content of that data from otherwise const tagged functions.
-This might suggest some faults in the class design but can you picture a scenario where this wont be the case?
+This might suggest some faults in the class design but can you picture a scenario where this won't be the case?
 
 ## Answer
 There are scenarios where using the mutable keyword is justified and does not indicate a fault in the class design.
@@ -659,7 +681,7 @@ This ensures that logging can occur even in `const` member functions.
 
 #
 ## Question
-Were writing an event system for our game and we decided to create a class that models the event itself. Please sketch a proposal for such a class, knowing that, through events, we need to pass a variable amount of data.
+We're writing an event system for our game and we decided to create a class that models the event itself. Please sketch a proposal for such a class, knowing that, through events, we need to pass a variable amount of data.
 ```
 class Event
 {
@@ -1496,7 +1518,7 @@ The `test` variable represents the unit direction vector pointing from `enemyPos
 #
 ## Question
 Assume a class `Vector`, representing a 3D coordinate in space, is fully implemented.
-We have a game in which all entities have a super-power: they can see 180° in front of them.
+We have a game in which all entities have a super-power: they can see 180� in front of them.
 The `Vector` representing entities' view (i.e. where their head is turned to) is called `sight`.
 We want to find the most efficient way to understand if the enemy can see the player.
 The data you have access to is represented by these variables:
