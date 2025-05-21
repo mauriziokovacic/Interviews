@@ -1518,7 +1518,7 @@ The `test` variable represents the unit direction vector pointing from `enemyPos
 #
 ## Question
 Assume a class `Vector`, representing a 3D coordinate in space, is fully implemented.
-We have a game in which all entities have a super-power: they can see 180Â° in front of them.
+We have a game in which all entities have a super-power: they can see 180° in front of them.
 The `Vector` representing entities' view (i.e. where their head is turned to) is called `sight`.
 We want to find the most efficient way to understand if the enemy can see the player.
 The data you have access to is represented by these variables:
@@ -1903,12 +1903,14 @@ void addToAll(const vec3* array, const vec3* toAdd, cost u32 num)
 #
 ## Question
 You want to know:
-- where a particular variable is stored in an executable
-- what the biggest global variables in a program are (by storage space, not value)
+1. where a particular variable is stored in an executable
+2. what the biggest global variables in a program are (by storage space, not value)
 
 How would you go about finding this information without running the program?
 
 ## Answer
+1. Use a symbol table dumper: Tools like `nm` on Unix, `objdump`, or `dumpbin` on Windows can list symbols and their addresses in the executable or object files.
+2. On Unix, `nm -S` can show symbol sizes. On Windows, `dumpbin /symbols` can be used to list symbols and their sizes.
 
 
 #
@@ -1940,6 +1942,14 @@ int square(int val) { return val*val; }
 ```
 
 ## Answer
+Macros can produce different results and side effects when:
+- The argument has side effects (e.g., `i++`, function calls).
+- The argument is an expression (e.g., `1+2`) and the macro is not properly parenthesized.
+- Type safety is required.
+
+Functions are safer and more predictable.
+Macros should be used with great care, and always with full parentheses around arguments and the macro body if used at all.
+
 
 
 #
@@ -2008,11 +2018,39 @@ vector<int> do_thing2(vector<int> data1, vector<int> data2)
 How can you improve built times of a large C++ project?
 
 ## Answer
+To improve build times of a large C++ project, consider the following strategies:
+- Minimize Header File Inclusions
+    - Use forward declarations where possible instead of including headers.
+    - Include headers only in source files (.cpp), not in other headers, unless necessary.
+- Precompiled Headers (PCH):
+    - Use precompiled headers to speed up compilation of commonly used headers.
+- Reduce Header File Size and Dependencies:
+    - Split large headers and avoid including unnecessary headers.
+    - Use the "pImpl" (pointer to implementation) idiom to reduce dependencies.
+- Use Unity/Jumbo Builds:
+    - Combine multiple source files into a single compilation unit to reduce overhead.
+- Parallel Builds:
+    - Enable multi-core compilation (e.g., /MP in Visual Studio, -j with make or ninja).
+    - Use external tools such as Incredibuilds or distcc for distributed builds.
+- Incremental Builds:
+    - Ensure your build system only rebuilds files that have changed.
+- Template Usage:
+    - Limit template usage in headers, as templates can cause code bloat and longer compile times.
+- Optimize Build System:
+    - Use efficient build systems like CMake with Ninja, or optimize your existing build scripts.
+- Disable Unnecessary Debug Info:
+    - Only generate debug information when needed.
+- Use Faster Storage:
+    - Place your build output and intermediate files on SSDs or fast storage.
+- Profile Build Times:
+    - Use tools (like Visual Studio’s Build Insights, clang -ftime-trace, or ninja -d stats) to identify bottlenecks.
+Applying these techniques can significantly reduce build times and improve developer productivity.
+
 
 
 #
 ## Question
-Given a set of natural positive numbers [1, ..., N], where N is known a entry is taken out from the set.
+Given a set of natural positive numbers [1, ..., N], where N is known, a entry is taken out from the set.
 Explain how you find the missing number
 ```
 Ex.:
@@ -2025,6 +2063,9 @@ N == 6
 ```
 
 ## Answer
+The sum of `N` natural numbers is represented as $\frac{N \cdot (N + 1)}{2}$.
+By summing the numbers in the array and subtracting it from the sum of `N` natural numbers, we can find the missing number.
+
 
 
 #
@@ -2140,7 +2181,8 @@ we can reduce the size of the class to 232 bytes.
 #
 ## Question
 This is a recursive function that transverses a tree by decoding secret messages.
-What problem would you run into if the tree was very deep(apart from it being slow)? Can you rearrange it to solve this problem ?
+What problem would you run into if the tree was very deep (apart from it being slow)?
+Can you rearrange it to solve this problem ?
 ```
 void recurseDecodeSecretMessage(node* n)
 {
@@ -2158,12 +2200,34 @@ void recurseDecodeSecretMessage(node* n)
 ```
 
 ## Answer
+If the tree is too deep, the function may cause a stack overflow due to excessive recursion depth.
+
+We could refactor the function as:
+```
+void recurseDecodeSecretMessage(node* n)
+{
+    while (n != nullptr)
+    {
+        s8 tmp[MAX_MESSAGE_LENGTH];
+        decodeSecretMessage(tmp, n->message, n->key);
+        if (strcmp(tmp, "Go Left") == 0)
+        {
+            n = n->leftNode;
+        }
+        else
+        {
+            n = n->rightNode;
+        }
+    }
+}
+```
 
 
 #
 ## Question
-These are part of a pack file system(single file that contains many files). There are many entries in each pack!
-How would you go about reducing the memory use of this, and as a bonus, speed up the find ?
+These are part of a pack file system (single file that contains many files). There are many entries in each pack!
+
+How would you go about reducing the memory use of this, and as a bonus, speed up the find?
 ```
 typedef struct pakFileEntry_s
 {
@@ -2197,9 +2261,83 @@ You have a file (in text format) that contains a list of symbols, like this:
 ...
 80 otherclass:function
 ```
-The first column is a decimal offset for the symbol. We want to know the total size of the symbols in each class. How would you do this?
+The first column is a decimal offset for the symbol.
+We want to know the total size of the symbols in each class.
+
+How would you do this?
 
 ## Answer
+```
+struct Symbol
+{
+    std::string className;
+    int offset;
+}
+
+
+Symbol parse_symbol(const std::string& data)
+{
+    int offset;
+    std::string text;
+    std::istringstream stream(data);
+    stream >> offset >> text;
+    std::string className = text.substr(0, text.find(':'));
+    return {className, offset};
+}
+
+
+std::vector<Symbol> parse_symbols(const std::string& filename)
+{
+    std::vector<Symbol> output;
+
+    std::ifstream file(filename);
+    std::string line;
+    while (std::getline(file, line))
+    {
+        output.push_back(parse_symbol(line));
+    }
+    std::sort(output.begin(), output.end(),
+        [](const Symbol& a, const Symbol& b)
+        {
+            const int result = a.className.compare(b.className);
+            if (result < 0)
+            {
+                return true;
+            }
+            if (result == 0)
+            {
+                return a.offset < b.offset;
+            }
+            return false;
+        });
+    return output;
+}
+
+
+std::map<std::string, int> get_size(const std::vector<Symbol>& data)
+{
+    std::map<std::string, int> output;
+
+    std::string currentClass = "";
+    int currentOffset;
+    for (std::size_t i = 0; i < data.size(); ++i)
+    {
+        const Symbol& entry = data[i];
+        if (currentClass != entry.className)
+        {
+            currentClass = entry.className;
+            currentOffset = 0;
+        }
+
+        output[currentClass] += entry.offset - currentOffset;
+        currentOffset = entry.offset;
+    }
+
+    return output;
+}
+
+
+```
 
 
 #
@@ -2232,6 +2370,7 @@ BubbleSort<u8*>(some32bitPointers, 100);
 ```
 Ignoring the inherent problems of bubble sort, why is this wasteful?
 (_If you are stuck consider why templates can be bad, but also the advantages they offer._)
+
 How would you go about writing a generic replacement?
 
 ## Answer
