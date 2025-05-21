@@ -182,7 +182,7 @@ Explain the memory usage of these two functions, and any side effects caused by 
 void Thing::A( const char * pFileName )
 {
 	char * pFullPath = new char[1024];
-	sprintf( pFullPath, “files/%s”, pFileName );
+	sprintf( pFullPath, Â“files/%sÂ”, pFileName );
   
 	m_Texture = new Texture( pFullPath );
 
@@ -192,7 +192,7 @@ void Thing::A( const char * pFileName )
 void Thing::B( const char * pFileName )
 {
 	char FullPath[1024];
-	sprintf( FullPath, “files/%s”, pFileName );
+	sprintf( FullPath, Â“files/%sÂ”, pFileName );
   
 	m_Texture = new Texture( FullPath );
 }
@@ -644,7 +644,7 @@ It allows a program to examine types, methods, fields, and other metadata dynami
 #
 ## Question
 The `mutable` keyword appointed to a class data member allows us to change the content of that data from otherwise const tagged functions.
-This might suggest some faults in the class design but can you picture a scenario where this won’t be the case?
+This might suggest some faults in the class design but can you picture a scenario where this wonÂ’t be the case?
 
 ## Answer
 There are scenarios where using the mutable keyword is justified and does not indicate a fault in the class design.
@@ -659,7 +659,7 @@ This ensures that logging can occur even in `const` member functions.
 
 #
 ## Question
-We’re writing an event system for our game and we decided to create a class that models the event itself. Please sketch a proposal for such a class, knowing that, through events, we need to pass a variable amount of data.
+WeÂ’re writing an event system for our game and we decided to create a class that models the event itself. Please sketch a proposal for such a class, knowing that, through events, we need to pass a variable amount of data.
 ```
 class Event
 {
@@ -783,7 +783,7 @@ void wrapper(T&& param)
 
 #
 ## Question
-Half-orcs are a mix between humans and orcs. Since both humans and orcs have a lot of common traits, we can all agree that both are part of the larger “humanoids” group.
+Half-orcs are a mix between humans and orcs. Since both humans and orcs have a lot of common traits, we can all agree that both are part of the larger "humanoids" group.
 Interestingly enough, while humans can have a variety of skin colors and orcs are green, for some reason half-orcs are always red.
 
 Please model the above statements using C++ classes.
@@ -946,20 +946,40 @@ Consider a character that can be moved on some game map by choosing a destinatio
 When navigating, the character can select from one of the following actions: walk, run or jump over obstacles.
 The pathfinder will compute a path from the current location to the desired one and what remains for us is to determine the appropriate moving action (e.g. can -run- in an open environment, but has to transition to just -walk- when traversing a narrow ledge).
 - Please describe a high level approach to select the 'natural' chain of actions while navigating some path.
-- The character can also attack, thus needing to do a transition from his current state. Actually, we realised that he can do all sorts of things and there’s an ever growing number of states and transitions. Please suggest an approach to avoid having to handle a great number of states and transitions.
+- The character can also attack, thus needing to do a transition from his current state. Actually, we realised that he can do all sorts of things and there's an ever growing number of states and transitions. Please suggest an approach to avoid having to handle a great number of states and transitions.
 
 ## Answer
 
 
 #
 ## Question
-Given a plane defined by a point Q and a normal vector n, a point P can be projected on the mentioned plane in a direction indicated by another vector v.
-We'll call the resulting projection point by P_proj.
-- Compute the projected point P_proj, writing the equation that links to P_proj to P
-Now consider that the direction of projection, previously given by v, is now defined by the line defined by the origin point O and the point P.
+Given a plane defined by a point $Q$ and a normal vector $\vec{n}$, a point $P$ can be projected on the mentioned plane in a direction indicated by another vector $\vec{v}$.
+We'll call the resulting projection point by $\Pi(P)$.
+- Compute the projected point $\Pi(P)$, writing the equation that links to $\Pi(P)$ to $P$
+Now consider that the direction of projection, previously given by $\vec{v}$, is now defined by the line defined by the origin point $O$ and the point $P$.
 - Write down the equation that models this new projection. Please mention the usual name attributed to this kind of projection.
 
 ## Answer
+We have the following two equations:
+- $(\Pi(P) - Q) \cdot \vec{n} = 0$
+- $\Pi(P) = P + t \cdot \vec{v}$
+
+Where $t$ is a scalar that determines how far along the direction $\vec{v}$ we go from $P$ to reach the plane.
+
+Substituting the second equation into the first gives us the projection point $\Pi(P)$ in terms of $P$:
+- $(P + t \cdot \vec{v} - Q) \cdot \vec{n} = 0$
+- $(P - Q) \cdot \vec{n} + t \cdot (\vec{v} \cdot \vec{n}) = 0$
+
+Then we can solve for $t$:
+- $t = \frac{(Q - P) \cdot \vec{n}}{\vec{v} \cdot \vec{n}}$
+
+Substituting $t$ back into the second equation gives us the projection point $\Pi(P)$:
+- $\Pi(P) = P + \frac{(Q - P) \cdot \vec{n}}{\vec{v} \cdot \vec{n}} \cdot \vec{v}$
+
+If the direction of projection is now defined by the line from the origin point $O$ to the point $P$, we can rewrite the equation as:
+- $\Pi(P) = P + \frac{(Q - P) \cdot \vec{n}}{P \cdot \vec{n}} \cdot P$
+
+The projection name is called perspective projection.
 
 
 #
@@ -1476,7 +1496,7 @@ The `test` variable represents the unit direction vector pointing from `enemyPos
 #
 ## Question
 Assume a class `Vector`, representing a 3D coordinate in space, is fully implemented.
-We have a game in which all entities have a super-power: they can see 180° in front of them.
+We have a game in which all entities have a super-power: they can see 180Â° in front of them.
 The `Vector` representing entities' view (i.e. where their head is turned to) is called `sight`.
 We want to find the most efficient way to understand if the enemy can see the player.
 The data you have access to is represented by these variables:
