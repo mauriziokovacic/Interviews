@@ -2878,7 +2878,7 @@ $M = C^-1 \cdot B^-1 \cdot A$
 
 #
 ## Question
-Describe geometrically the difference between applying a rigid transform to the vectors $p = [x y z 1]^T$ and $q = [x y z 0]^T$
+Describe geometrically the difference between applying a rigid transform to the vectors $p = [x, y, z, 1]^T$ and $q = [x, y, z, 0]^T$
 
 ## Answer
 The two vectors are expressed in homogeneous coordinates.
