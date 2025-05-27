@@ -50,10 +50,15 @@ e. C-style cast
 
 ## Answer
 a. Used for compile-time type conversions. It can convert between related types (e.g., base and derived classes) and perform numeric conversions. It does not perform runtime checks.
+
 b. Used to add or remove the `const` qualifier from a variable. It allows modifying a const object, but should be used with caution. Modifying a truly const object after removing const is undefined behavior.
+
 c. Used for low-level type conversions. It can convert any pointer type to any other pointer type, but it does not check for type safety. It should be used with caution as it can lead to undefined behavior if misused.
+
 d. Used for safe downcasting in class hierarchies. It checks at runtime if the cast is valid (i.e., if the object is of the target type). If the cast fails, it returns `nullptr` for pointer types or throws an exception for references.
+
 e. A legacy casting method that combines the functionality of static_cast, const_cast, and reinterpret_cast. It is less safe and harder to read compared to C++-style casts, as it does not specify the intent of the cast.
+
 
 #
 ## Question
