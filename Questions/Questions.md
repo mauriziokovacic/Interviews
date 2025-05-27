@@ -2374,6 +2374,35 @@ Ignoring the inherent problems of bubble sort, why is this wasteful?
 How would you go about writing a generic replacement?
 
 ## Answer
+This code is wasteful because it generates separate instances of the `BubbleSort` function for each type used, leading to code bloat and increased compilation time.
+Each instantiation of the template creates a new copy of the function, which can lead to larger binary sizes if many types are used.
+A generic, non-template sort can be written using `void*` and a comparison function pointer.
+This avoids code bloat and works for any type:
+```
+void BubbleSort(void* begin, u32 num, u32 size, int (*compare)(const void*, const void*)) {
+    char* ptr = static_cast<char*>(begin);
+    u32 change;
+    do
+    {
+        change = FALSE;
+        for (u32 i = 0; i < num - 1; ++i)
+        {
+            char* a = ptr + i * size;
+            char* b = ptr + (i + 1) * size;
+            if (compare(a, b) > 0)
+            {
+                for (u32 j = 0; j < size; ++j)
+                {
+                    char tmp = a[j];
+                    a[j] = b[j];
+                    b[j] = tmp;
+                }
+                change = TRUE;
+            }
+        }
+    } while (change);
+}
+```
 
 
 #
