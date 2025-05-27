@@ -965,12 +965,20 @@ Please propose a possible implementation for this problem.
 #
 ## Question
 Consider a character that can be moved on some game map by choosing a destination with the mouse.
-When navigating, the character can select from one of the following actions: walk, run or jump over obstacles.
-The pathfinder will compute a path from the current location to the desired one and what remains for us is to determine the appropriate moving action (e.g. can -run- in an open environment, but has to transition to just -walk- when traversing a narrow ledge).
+When navigating, the character can select from one of the following actions: **walk**, **run** or **jump over obstacles**.
+
+The pathfinder will compute a path from the current location to the desired one and what remains for us is to determine the appropriate moving action (e.g. can **run** in an open environment, but has to transition to just **walk** when traversing a narrow ledge).
 - Please describe a high level approach to select the 'natural' chain of actions while navigating some path.
-- The character can also attack, thus needing to do a transition from his current state. Actually, we realised that he can do all sorts of things and there's an ever growing number of states and transitions. Please suggest an approach to avoid having to handle a great number of states and transitions.
+- The character can also **attack**, thus needing to do a transition from his current state. Actually, we realised that he can do all sorts of things and there's an ever growing number of states and transitions. Please suggest an approach to avoid having to handle a great number of states and transitions.
 
 ## Answer
+When computing a path for the character, we can use annotations or properties for each segment of the path to determine the appropriate action.
+For instance, we can assign properties like "open area", "narrow ledge", or "obstacle" to each segment of the path.
+The character can then select the proper action based on these properties. If two consecutive segments have different properties, then the character can transition between actions (e.g., from **run** to **walk** when entering a narrow ledge from an open area).
+
+More in general, we can use a state machine or a behaviour tree to model the character's actions and transitions.
+This will allow us to define high-level states (like **moving**, **attacking**, etc.) and transitions based on conditions (like reaching a certain point in the path or encountering an obstacle).
+Moreover, we can group similar actions and reduce the number of states and transitions, handling them in a more abstract way, and scaling better with the growing number of actions.
 
 
 #
@@ -1979,6 +1987,7 @@ vector<int> do_thing(vector<int> data1, vector<int> data2)
     return output;
 }
 ```
+
 One of our client would like to use this function, but he/she is not interested in having the output vector, and can't afford to use memory to store the values.
 Instead, he/she would like the function to print directly the value i instead of pushing it back in the output vector.
 Change the function in such a way each customer can decide its behavior.
@@ -2011,6 +2020,33 @@ vector<int> do_thing2(vector<int> data1, vector<int> data2)
 ```
 
 ## Answer
+The function `vector<int> do_thing(vector<int> data1, vector<int> data2)` returns a vector containing the common elements between of `data1` and `data2`.
+Its computational complexity is $O(n_{data1} log n_{data1})$ due to the sorting of `data1`, plus $O(n_{data2} log n_{data1})$ due to searching for the common elements.
+Its memory complexity is $O(n)$ for the `output` vector.
+
+If the client does not need the output vector, we can modify the function to print the values directly instead of pushing them into the output vector.
+The modified function would look like this:
+```
+void do_thing(vector<int> data1, vector<int> data2)
+{
+    sort(data1.begin(), data1.end());
+    for (auto i : data2)
+    {
+        auto it = lower_bound(data1.begin(), data1.end(), i);
+        if (it != data1.end() && *it == i)
+        {
+            std::cout << i << std::endl; // Print instead of pushing to output
+        }
+    }
+}
+```
+
+The second function `vector<int> do_thing2(vector<int> data1, vector<int> data2)` also returns a vector containing the common elements between `data1` and `data2`, but it uses a set to store the elements of `data1` for faster lookups.
+Its computational complexity is $O(n_{data1} + log n_{data1})$ for inserting elements into the set, plus $O(n_{data2} log n_{data1})$ due to searching for the common elements.
+Its memory complexity is $O(2n)$ for the `output` vector and the set.
+
+In general, the first function is faster, because avoids the overhead of inserting elements into a set, and it is more memory efficient as it only uses one vector for output.
+If `unordered_set` is used instead of `set`, the second function could be faster than the first one, as its time complexity goes down to $O(n_{data1} + n_{data2})$ in total.
 
 
 #
@@ -2225,7 +2261,8 @@ void recurseDecodeSecretMessage(node* n)
 
 #
 ## Question
-These are part of a pack file system (single file that contains many files). There are many entries in each pack!
+These are part of a pack file system (single file that contains many files).
+There are many entries in each pack!
 
 How would you go about reducing the memory use of this, and as a bonus, speed up the find?
 ```
@@ -2407,7 +2444,8 @@ void BubbleSort(void* begin, u32 num, u32 size, int (*compare)(const void*, cons
 
 #
 ## Question
-The following class is used to store entries in a string table, containing thousands of entries. How could the memory use be reduced?
+The following class is used to store entries in a string table, containing thousands of entries.
+How could the memory use be reduced?
 ```
 class StringTableEntry
 {
@@ -2432,6 +2470,34 @@ public:
 ```
 
 ## Answer
+```
+class StringTableEntry
+{
+public:
+	StringTableEntry();
+	~StringTableEntry();
+
+	const char* getString(const char* ptr)
+	{
+		return ptr + offset;
+	}
+
+	u8 getFlags(void) const
+	{
+		return flags;
+	}
+
+	u32 offset;
+    u8 flags;
+};
+```
+
+A possible solution is to store the string as an offset from a base pointer, rather than storing a pointer directly.
+This reduces the size of each entry from 8 bytes (on a 64-bit system) to 4 bytes for the offset.
+
+Assuming 8 (bit flags) or 256 flags are sufficient, then 1 byte for the flags is going to be more than enough, saving further memory.
+
+Lastly, avoiding virtual functions can also save memory and improve performance, as virtual function tables (vtables) add overhead to each instance of the class.
 
 
 #
@@ -2479,21 +2545,63 @@ void Insert(Node* insertAfter, Node* nodeToInsert)
 #
 ## Question
 Use C# or C++ to show the structure of an element of a sorted binary tree in which each element contains a single character.
+
 Describe briefly what any reference point to.
 
 ## Answer
+```
+struct Node
+{
+    Node(
+        char value = '\0',
+        Node* parent = nullptr,
+        Node* left = nullptr,
+        Node* right = nullptr)
+        : m_Parent(parent), m_Left(left), m_Right(right), m_Value(value)
+    { }
+
+    Node* parent; // Pointer to the parent node [optional]. Nullptr if this is the root node
+    Node* left; // Pointer to the left child node, containing a character less than value
+    Node* right; // Pointer to the right child node, containing a character greater than value
+    char value; // Character value stored in the node
+};
+```
 
 
 #
 ## Question
 Use C# or C++ to implement a function that locates the element in the tree which matches a given character.
+
 It should match this signature:
 ```
 Node FindElementInTree(Node root, char charToFind)
 ```
 
 ## Answer
+```
+Node FindElementInTree(Node root, char charToFind)
+{
+    Node* current = &root;
 
+    while (current != nullptr)
+    {
+        if (current->value == charToFind)
+        {
+            return *current; // Found the element
+        }
+        
+        if (charToFind < current->value)
+        {
+            current = current->left; // Go left
+        }
+        else
+        {
+            current = current->right; // Go right
+        }
+    }
+    return Node(); // Return an empty node if not found
+}
+```
 
 #
 ## Question
@@ -2754,24 +2862,29 @@ private:
 ## Question
 A game engine arranges its objects in a hierarchy. 
 Assume we have a scene consists of the following 4 objects:
-- The root R.
-- A and B: children of R.
-- C: child of B.
+- The root `R`.
+- `A` and `B`: children of `R`.
+- `C`: child of `B`.
 
-The position and orientation of each object is represented as a 4x4 matrix transforming the local space of the object to the space of its' parent.
+The position and orientation of each object is represented as a 4x4 matrix transforming the local space of the object to the space of its parent.
 Vectors are in homogeneous coordinates and are represented by 4-component column vectors.
 
-What is the equation for the matrix M transforming points from the local space of A to the local space of C?
+What is the equation for the matrix `M` transforming points from the local space of `A` to the local space of `C`?
 
 ## Answer
+The transformation to the local space of `C` is given by the matrix multiplication:
+$M = C^-1 \cdot B^-1 \cdot A$
 
 
 #
 ## Question
-Describe geometrically the difference between applying a rigid transform to the vectors `p = [x y z 1]^T` and `q = [x y z 0]^T`
+Describe geometrically the difference between applying a rigid transform to the vectors $p = [x y z 1]^T$ and $q = [x y z 0]^T$
 
 ## Answer
-The two vectors are expressed in homogeneous coordinates. The first one is a point in 3D space, while the second one is a direction vector.
+The two vectors are expressed in homogeneous coordinates.
+
+The first one is a point in 3D space, while the second one is a direction vector.
+
 The difference between them is that the first one is affected by both translation and rotation, while the second one only by the rotation.
 
 
@@ -2781,9 +2894,15 @@ Representing rigid transformations by 4x4 matrices will in a straightforward imp
 Briefly describe a representation using as few floats as possible without loss of precision.
 
 ## Answer
-A first possibility could be ommitting the bottom part of the matrix, which is always [0 0 0 1]. This would reduce the size to 12 floats.
-A second possibility could be using dual quaternions to represent the rotation and translation of the object. This would reduce the size to 8 floats.
-Another possibility could be using a quaternion to represent the rotation and a 3D vector to represent the translation. This would reduce the size to 7 floats.
+A first possibility could be ommitting the bottom part of the matrix, which is always $[0 0 0 1]$.
+This would reduce the size to 12 floats.
+
+A second possibility could be using dual quaternions to represent the rotation and translation of the object.
+This would reduce the size to 8 floats.
+
+Another possibility could be using a quaternion to represent the rotation and a 3D vector to represent the translation.
+This would reduce the size to 7 floats.
+
 
 #
 ## Question
