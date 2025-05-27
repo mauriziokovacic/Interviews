@@ -2875,6 +2875,10 @@ What is the equation for the matrix `M` transforming points from the local space
 The transformation to the local space of `C` is given by the matrix multiplication:
 $M = C^{-1} \cdot B^{-1} \cdot A$
 
+- Multiplying by matrix $A$, bring a point from the local space of `A` to the local space of `R`.
+- Multiplying by matrix $B^{-1}$ brings the point from the local space of `R` to the local space of `B`.
+- Multiplying by matrix $C^{-1}$ brings the point from the local space of `B` to the local space of `C`.
+
 
 #
 ## Question
