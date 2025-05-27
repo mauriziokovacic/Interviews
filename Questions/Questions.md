@@ -74,7 +74,9 @@ void ThingManager::Register(class Thing * pThing)
 
 ## Answer
 This code is dangerous in a multi-threaded environment because the increment operation is not atomic, leading to race conditions in a multi-threaded scenario.
+
 One way to prevent the race condition to happen is to use a mutex to lock the critical section.
+
 Another possible solution is to use atomic operations, such as `std::atomic<int>`, which ensures that the increment operation is thread-safe without needing explicit locks.
 
 
@@ -84,8 +86,10 @@ Explain what the vtable is and how it works internally
 
 ## Answer
 A vtable is essentially a table of function pointers. Each class with virtual functions has its own vtable, which contains pointers to the virtual functions of that class.
+
 For a class with virtual functions, each object of that class contains a hidden pointer, which points to the vtable of the class.
 This allows the program to determine the correct function to call at runtime, based on the actual type of the object.
+
 When a virtual function is called on an object, the program looks up the vtable for that object's class to find the correct function pointer and calls the function through that pointer.
 
 
@@ -967,12 +971,14 @@ protected:
 #
 ## Question
 Given a large 2D game map we would like to pathfind our way between any 2 points.
+
 For this scenario we will use a grid to partition the space, each cell being either free or blocked by some collision box.
 Also we would like to consider dynamic moving obstacles (like other moving characters) that would need to be avoided.
 
 Please propose a possible implementation for this problem.
 
 ## Answer
+
 
 
 #
