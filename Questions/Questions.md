@@ -3,8 +3,12 @@
 Explain the difference between "pass by value" and "pass by reference". When would you use one over the other?
 
 ## Answer
-When a function parameter is passed by value, a copy of the actual value is made and passed to the function. Any changes made to the parameter inside the function do not affect the original value outside the function.
-When a function parameter is passed by reference, the function receives a reference (or alias) to the original variable. Any changes made to the parameter inside the function directly affect the original variable.
+When a function parameter is passed by value, a copy of the actual value is made and passed to the function.
+Any changes made to the parameter inside the function do not affect the original value outside the function.
+
+When a function parameter is passed by reference, the function receives a reference (or alias) to the original variable.
+Any changes made to the parameter inside the function directly affect the original variable.
+
 - Use pass by value for small, immutable data or when you want to ensure the original data remains unchanged.
 - Use pass by reference for large objects or when you need to modify the original data.
 
@@ -226,8 +230,10 @@ Why is unordered memory access slower than sequential access?
 
 ## Answer
 Unordered memory access is slower than sequential access primarily due to cache locality and memory prefetching.
+
 Sequential memory access takes advantage of spatial locality, where adjacent memory locations are loaded into the cache together.
 This reduces the number of expensive main memory accesses.
+
 In contrast, unordered access often results in cache misses, as the accessed memory locations are scattered and not already in the cache.
 
 
@@ -670,7 +676,9 @@ This might suggest some faults in the class design but can you picture a scenari
 
 ## Answer
 There are scenarios where using the mutable keyword is justified and does not indicate a fault in the class design.
+
 These scenarios typically involve operations that do not conceptually alter the logical state of the object, even though they modify some internal data.
+
 Here are a few examples:
 1. Caching: When a class needs to cache the result of an expensive computation, the cache can be marked as `mutable`.
 This allows the cache to be updated in a `const` member function without violating the `const` contract.
@@ -973,10 +981,13 @@ The pathfinder will compute a path from the current location to the desired one 
 
 ## Answer
 When computing a path for the character, we can use annotations or properties for each segment of the path to determine the appropriate action.
+
 For instance, we can assign properties like "open area", "narrow ledge", or "obstacle" to each segment of the path.
+
 The character can then select the proper action based on these properties. If two consecutive segments have different properties, then the character can transition between actions (e.g., from **run** to **walk** when entering a narrow ledge from an open area).
 
 More in general, we can use a state machine or a behaviour tree to model the character's actions and transitions.
+
 This will allow us to define high-level states (like **moving**, **attacking**, etc.) and transitions based on conditions (like reaching a certain point in the path or encountering an obstacle).
 Moreover, we can group similar actions and reduce the number of states and transitions, handling them in a more abstract way, and scaling better with the growing number of actions.
 
@@ -1257,6 +1268,7 @@ int main()
 
 ## Answer
 The code will fail to compile because the copy constructor of class `A` is deleted. 
+
 When trying to create an object `b` as a copy of `a`, the compiler will generate an error indicating that the copy constructor is not available.
 
 
@@ -1526,9 +1538,11 @@ The `test` variable represents the unit direction vector pointing from `enemyPos
 #
 ## Question
 Assume a class `Vector`, representing a 3D coordinate in space, is fully implemented.
+
 We have a game in which all entities have a super-power: they can see 180° in front of them.
 The `Vector` representing entities' view (i.e. where their head is turned to) is called `sight`.
 We want to find the most efficient way to understand if the enemy can see the player.
+
 The data you have access to is represented by these variables:
 ```
     Vector playerPosition;
@@ -1536,6 +1550,7 @@ The data you have access to is represented by these variables:
     Vector enemyPosition;
     Vector enemySight;
 ```
+
 Among the given solutions, select the correct one and state why is the case.
 
 ```
@@ -2021,7 +2036,7 @@ vector<int> do_thing2(vector<int> data1, vector<int> data2)
 
 ## Answer
 The function `vector<int> do_thing(vector<int> data1, vector<int> data2)` returns a vector containing the common elements between of `data1` and `data2`.
-Its computational complexity is $O(n_{data1} log n_{data1})$ due to the sorting of `data1`, plus $O(n_{data2} log n_{data1})$ due to searching for the common elements.
+Its computational complexity is $O(n_{data1} \cdot \log n_{data1})$ due to the sorting of `data1`, plus $O(n_{data2} \cdot \log n_{data1})$ due to searching for the common elements.
 Its memory complexity is $O(n)$ for the `output` vector.
 
 If the client does not need the output vector, we can modify the function to print the values directly instead of pushing them into the output vector.
@@ -2042,7 +2057,7 @@ void do_thing(vector<int> data1, vector<int> data2)
 ```
 
 The second function `vector<int> do_thing2(vector<int> data1, vector<int> data2)` also returns a vector containing the common elements between `data1` and `data2`, but it uses a set to store the elements of `data1` for faster lookups.
-Its computational complexity is $O(n_{data1} + log n_{data1})$ for inserting elements into the set, plus $O(n_{data2} log n_{data1})$ due to searching for the common elements.
+Its computational complexity is $O(n_{data1} \cdot \log n_{data1})$ for inserting elements into the set, plus $O(n_{data2} \cdot \log n_{data1})$ due to searching for the common elements.
 Its memory complexity is $O(2n)$ for the `output` vector and the set.
 
 In general, the first function is faster, because avoids the overhead of inserting elements into a set, and it is more memory efficient as it only uses one vector for output.
@@ -2062,12 +2077,12 @@ To improve build times of a large C++ project, consider the following strategies
     - Use precompiled headers to speed up compilation of commonly used headers.
 - Reduce Header File Size and Dependencies:
     - Split large headers and avoid including unnecessary headers.
-    - Use the "pImpl" (pointer to implementation) idiom to reduce dependencies.
+    - Use the `pImpl` (pointer to implementation) idiom to reduce dependencies.
 - Use Unity/Jumbo Builds:
     - Combine multiple source files into a single compilation unit to reduce overhead.
 - Parallel Builds:
-    - Enable multi-core compilation (e.g., /MP in Visual Studio, -j with make or ninja).
-    - Use external tools such as Incredibuilds or distcc for distributed builds.
+    - Enable multi-core compilation (e.g., `/MP` in Visual Studio, `-j` with make or ninja).
+    - Use external tools such as _Incredibuilds_ or _distcc_ for distributed builds.
 - Incremental Builds:
     - Ensure your build system only rebuilds files that have changed.
 - Template Usage:
@@ -2079,7 +2094,7 @@ To improve build times of a large C++ project, consider the following strategies
 - Use Faster Storage:
     - Place your build output and intermediate files on SSDs or fast storage.
 - Profile Build Times:
-    - Use tools (like Visual Studio’s Build Insights, clang -ftime-trace, or ninja -d stats) to identify bottlenecks.
+    - Use tools (like Visual Studio's Build Insights, clang `-ftime-trace`, or ninja `-d stats`) to identify bottlenecks.
 Applying these techniques can significantly reduce build times and improve developer productivity.
 
 
@@ -2412,7 +2427,9 @@ How would you go about writing a generic replacement?
 
 ## Answer
 This code is wasteful because it generates separate instances of the `BubbleSort` function for each type used, leading to code bloat and increased compilation time.
+
 Each instantiation of the template creates a new copy of the function, which can lead to larger binary sizes if many types are used.
+
 A generic, non-template sort can be written using `void*` and a comparison function pointer.
 This avoids code bloat and works for any type:
 ```
