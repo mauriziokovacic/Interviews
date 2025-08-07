@@ -82,7 +82,7 @@ map_t initialize_feature(const std::vector<std::string>& feature)
 // features occurrences in place
 void count(map_t& feature, const std::string& request)
 {
-    const std::set<std::string> word = tokenize(request);
+    const word_t word = tokenize(request);
     for (const auto& w : word)
     {
         auto it = feature.find(w);
@@ -121,4 +121,5 @@ std::vector<std::string> most_wanted_features(const uint N, const std::vector<st
     
     return result;
 }
+
 
