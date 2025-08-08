@@ -11,7 +11,11 @@ For this, we can perform the following 3 step operation multiple times (possibly
 - Transfer any one power unit from the selected machine to **any** other machine.
 - Mark the selected machine and it cannot be chosen for further operations. However, marked machines can still receive power units from other machines.
 
-Implement the function `long getStrength(const std::vector<std::vector<long>>& machine_powers)` that finds the maximum sum of strengths of all machines.
+Implement the function 
+```
+long getStrength(const std::vector<std::vector<long>>& machine_powers)
+```
+that finds the maximum sum of strengths of all machines.
 
 > Note:
 - Each machine can transfer at most one power unit during the entire process, only when it is unmarked.
@@ -62,4 +66,5 @@ We can move the power unit with power $2$ from the third machine to the second m
 Then the strength is $min(2, 2, 2, 2) + min(2, 4, 3, 2, 2) + min(5, 3, 3) = 7$.
 
 So the answer is $7$.
+
 
