@@ -27,7 +27,7 @@ void preProcessData(std::vector<std::vector<int>>& inGrid, std::queue<Cell>& out
 }
 
 
-void processData(std::vector<std::vector<int>>& inGrid, std::queue<Cell>& inQueue, Cell& outMaxCell)
+void processData(std::vector<std::vector<int>>& inGrid, std::queue<Cell>& inQueue)
 {
 	const int rows = inGrid.size();
 	const int cols = inGrid[0].size();
@@ -62,21 +62,26 @@ void processData(std::vector<std::vector<int>>& inGrid, std::queue<Cell>& inQueu
 		inQueue.push({ i - 1, j + 1, nextValue });
 		inQueue.push({ i - 1, j    , nextValue });
 		inQueue.push({ i - 1, j - 1, nextValue });
-	}
+	}	
+}
 
-	outMaxCell.value = std::numeric_limits<int>::min();
+
+Cell findMaxValue(const std::vector<std::vector<int>>& grid)
+{
+	Cell output = { -1, -1, std::numeric_limits<int>::min() };
 	for (int i = 0; i < inGrid.size(); ++i)
 	{
 		for (int j = 0; j < inGrid[i].size(); ++j)
 		{
-			if (inGrid[i][j] > outMaxCell.value)
+			if (inGrid[i][j] > output.value)
 			{
-				outMaxCell.i = i;
-				outMaxCell.j = j;
-				outMaxCell.value = inGrid[i][j];
+				output.i = i;
+				output.j = j;
+				output.value = inGrid[i][j];
 			}
 		}
 	}
+	return output;
 }
 
 
@@ -96,13 +101,15 @@ int getMinInconvenience(std::vector<std::vector<int>> grid)
 	}
 	else
 	{
-		processData(grid, queue, maxCell);
+		processData(grid, queue);
+		maxCell = findMaxValue(grid);
 		queue = std::queue<Cell>();
 		maxCell.value = 0;
 	}
 
 	queue.push(maxCell);
-	processData(grid, queue, maxCell);
+	processData(grid, queue);
+	maxCell = findMaxValue(grid);
 
 	return maxCell.value;
 }
