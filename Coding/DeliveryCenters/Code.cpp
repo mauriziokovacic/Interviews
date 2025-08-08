@@ -93,6 +93,7 @@ int getMinInconvenience(std::vector<std::vector<int>> grid)
 	{
 		processData(grid, queue, maxCell);
 		queue = std::queue<Cell>();
+		maxCell.value = 0;
 	}
 
 	queue.push(maxCell);
