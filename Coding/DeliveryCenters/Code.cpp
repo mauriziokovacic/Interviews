@@ -32,8 +32,6 @@ void processData(std::vector<std::vector<int>>& inGrid, std::queue<Cell>& inQueu
 	const int rows = inGrid.size();
 	const int cols = inGrid[0].size();
 
-	int maxValue = std::numeric_limits<int>::min();
-
 	while (!inQueue.empty())
 	{
 		Cell current = inQueue.front();
@@ -54,15 +52,8 @@ void processData(std::vector<std::vector<int>>& inGrid, std::queue<Cell>& inQueu
 		}
 
 		inGrid[i][j] = value;
-		
-		if (value > maxValue)
-		{
-			maxValue = value;
-			outMaxCell = current;
-		}
 
 		const int nextValue = value + 1;
-
 		inQueue.push({ i + 1, j + 1, nextValue });
 		inQueue.push({ i + 1, j    , nextValue });
 		inQueue.push({ i + 1, j - 1, nextValue });
@@ -71,6 +62,20 @@ void processData(std::vector<std::vector<int>>& inGrid, std::queue<Cell>& inQueu
 		inQueue.push({ i - 1, j + 1, nextValue });
 		inQueue.push({ i - 1, j    , nextValue });
 		inQueue.push({ i - 1, j - 1, nextValue });
+	}
+
+	outMaxCell.value = std::numeric_limits<int>::min();
+	for (int i = 0; i < inGrid.size(); ++i)
+	{
+		for (int j = 0; j < inGrid[i].size(); ++j)
+		{
+			if (inGrid[i][j] > outMaxCell.value)
+			{
+				outMaxCell.i = i;
+				outMaxCell.j = j;
+				outMaxCell.value = inGrid[i][j];
+			}
+		}
 	}
 }
 
