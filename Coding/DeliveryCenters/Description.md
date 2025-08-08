@@ -8,7 +8,12 @@ The inconvenience of the grid is defined as the maximum distance of any place ma
 
 We are planning to open a new delivery center to reduce the inconvenience of the grid.
 
-Implement the function `int getMinInconvenience(std::vector<std::vector<int>> grid)`, which returns the minimum inconvenience of the grid by converting at most one $0$ (_any place_) to $1$ (_a delivery center_).
+Implement the function 
+```
+int getMinInconvenience(std::vector<std::vector<int>> grid)
+````
+which returns the minimum inconvenience of the grid by converting at most one $0$ (_any place_) to $1$ (_a delivery center_).
+
 
 ## Constraints
 - $1 \leq n$
@@ -83,4 +88,5 @@ Given $grid = [[0]]$, the situation is as follows:
 $0$
 
 ### Explanation
+
 It is optimal to convert the only $0$ to $1$
