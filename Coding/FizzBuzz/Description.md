@@ -4,11 +4,11 @@ You have to implement the function
 ```
 void fizzBuzz(int n)
 ```
-that given a number `n`, for each integer `i` in the range from 1 to `n` (_inclusive_), print one value per line as follows:
-- if `i` is a multiple of both 3 and 5, print _FizzBuzz_.
-- if `i` is a multiple of 3 (but not 5), print _Fizz_.
-- if `i` is a multiple of 5 (but not 3), print _Buzz_.
-- if `i` is not a multiple of 3 or 5, print the value of `i`
+that given a number `n`, for each integer `i` in the range from $1$ to `n` (_inclusive_), print one value per line as follows:
+- if `i` is a multiple of both $3$ and $5$, print _FizzBuzz_.
+- if `i` is a multiple of $3$ (but not $5$), print _Fizz_.
+- if `i` is a multiple of $5$ (but not $3$), print _Buzz_.
+- if `i` is not a multiple of $3$ or $5$, print the value of `i`
 
 
 ## Constraints
