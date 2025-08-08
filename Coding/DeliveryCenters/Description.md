@@ -18,7 +18,7 @@ which returns the minimum inconvenience of the grid by converting at most one $0
 ## Constraints
 - $1 \leq n$
 - $m \leq 500$
-- $grid_ij \in \{0, 1\}$
+- $grid_{ij} \in \{0, 1\}$
 
 
 ## Example 1
@@ -90,4 +90,5 @@ $0$
 ### Explanation
 
 It is optimal to convert the only $0$ to $1$
+
 
