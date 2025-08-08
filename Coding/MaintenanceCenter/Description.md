@@ -1,6 +1,6 @@
 # Maintenance Center
 
-In the maintenance center, there exist $n$ machines, each equipped with $m$ ($m >= 2$) power units.
+In the maintenance center, there exist $n$ machines, each equipped with $m$ ($m \geq 2$) power units.
 The power of the _j_-th power unit in the _i_-th machine is denoted as `machine_powers[i][j]`.
 The strength of a machine is defined as the minimum power among all its power units.
 
@@ -59,4 +59,5 @@ $7$
 ### Exaplaination
 We can move the power unit with power $2$ from the third machine to the second machine.
 Then the strength is $min(2, 2, 2, 2) + min(2, 4, 3, 2, 2) + min(5, 3, 3) = 7$.
+
 So the answer is $7$.
