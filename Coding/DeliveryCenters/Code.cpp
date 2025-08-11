@@ -102,8 +102,8 @@ int getMinInconvenience(std::vector<std::vector<int>> grid)
 	else
 	{
 		processData(grid, queue);
-		maxCell = findMaxValue(grid);
 		queue = std::queue<Cell>();
+		maxCell = findMaxValue(grid);
 		maxCell.value = 0;
 	}
 
