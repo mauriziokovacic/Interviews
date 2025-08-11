@@ -44,6 +44,7 @@ Given array A such that:
 ```
 the function should return 1, because there are three alternating slices (0, 0), (1, 1) and (2, 2) and all of them are of length 1.
 
+## Constraints
 Write an efficient algorithm for the following assumptions:
-    - N is an integer within the range [1,100000];
-    - each element of array A is an integer within the range [-1000000000,1000000000].
+- N is an integer within the range [1,100000];
+- each element of array A is an integer within the range [-1000000000,1000000000].
