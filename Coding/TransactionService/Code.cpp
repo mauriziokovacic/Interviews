@@ -34,8 +34,6 @@ std::vector<std::string> processLogs(const std::vector<std::string>& logs, int t
 			result.push_back(entry.first);
 		}
 	}
-	
-	std::sort(result.begin(), result.end());
 
 	return result;
 }
