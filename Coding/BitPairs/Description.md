@@ -1,20 +1,20 @@
 # Count bits pairs
 
 Write a function:
-
-    size_t count(uint32_t data)
-
+```
+size_t count(uint32_t data)
+```
 that counts the pairs of 1s set in the input data.
 
-> Example:\
-    010101 -> 0\
-    101100 -> 1\
-    110011 -> 2\
-    110111 -> 3
+## Example
+```
+010101 -> 0
+101100 -> 1
+110011 -> 2
+110111 -> 3
+```
 
-
-Follow up:
-
+## Follow up
 1. Can you generalize the function such that it can receive any integral data?
 2. Can you spot any issue with this implementation?
 3. Can you change the function such that it won't be compiled unless an unsigned integral is passed as input?
