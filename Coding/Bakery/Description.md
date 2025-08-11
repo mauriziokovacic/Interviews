@@ -3,6 +3,7 @@
 A bakery bakes breads in batches of BatchSize. The customers will line up in groups of N people and wait to be served.
 - If a group of people get only freshly baked bread, it will be a happy group.
 - If a group is given leftovers from a previous bread batch, it will not be happy.
+
 **NOTE**: A group will be happy even if the people receives bread from different consecutive batches
 
 Given the BatchSize and the groups line, count how many happy groups there will be.
