@@ -19,10 +19,10 @@ BatchSize = 3
 Groups = { 2, 3, 1 }
 ```
 
-## Expected output
+### Expected output
 $1$
 
-## Explanation
+### Explanation
 The first group is composed of two people and everyone gets a freshly baked bread.
 The second group is composed of three people, but it gets one bread from a previous batch and two freshly baked ones.
 The third group is composed of one person and it gets one bread from a previous batch.
@@ -33,8 +33,8 @@ Only the first group will be happy.
 BatchSize = 3
 Group = 5
 ```
-## Expected output
+### Expected output
 $1$
 
-## Explanation
+### Explanation
 This will be a happy group.
