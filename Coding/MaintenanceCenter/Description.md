@@ -17,10 +17,10 @@ long getStrength(const std::vector<std::vector<long>>& machine_powers)
 ```
 that finds the maximum sum of strengths of all machines.
 
-> Note:
-> - Each machine can transfer at most one power unit during the entire process, only when it is unmarked.
-> - A machine can receive power units from multiple other machines, even after it has been marked.
-> - The operation can be performed multiple times, but only unmarked machines can be selected during each operation.
+#### Note
+- Each machine can transfer at most one power unit during the entire process, only when it is unmarked.
+- A machine can receive power units from multiple other machines, even after it has been marked.
+- The operation can be performed multiple times, but only unmarked machines can be selected during each operation.
 
 
 ## Constraints
@@ -41,7 +41,7 @@ The operations can be performed as follows:
 1. Select machine $1$ and transfer the unit with power $1$ to machine $2$. Now $machine\\_powers = [[5], [1, 4, 3], [2, 10]]$.
 2. Select machine $3$ and transfer the unit with power $2$ to machine $2$. Now $machine\\_powers = [[5], [1, 2, 4, 3], [10]]$.
 
-The sum of strengths is $min(5) + min(1, 2, 4, 3) + min(10) = 5 + 1 + 10 = 16$, which is the maximum possible.
+The sum of strengths is $\min(5) + \min(1, 2, 4, 3) + \min(10) = 5 + 1 + 10 = 16$, which is the maximum possible.
 
 
 ## Example 2
@@ -52,7 +52,7 @@ $6$
 
 ### Exaplaination
 We can move the power unit with power $2$ from the first machine to the second machine.
-Then the strength is $min(7, 4) + min(2, 4, 3, 2) = 6$, so the answer is $6$.
+Then the strength is $\min(7, 4) + \min(2, 4, 3, 2) = 6$, so the answer is $6$.
 
 
 ## Example 3
@@ -63,9 +63,10 @@ $7$
 
 ### Exaplaination
 We can move the power unit with power $2$ from the third machine to the second machine.
-Then the strength is $min(2, 2, 2, 2) + min(2, 4, 3, 2, 2) + min(5, 3, 3) = 7$.
+Then the strength is $\min(2, 2, 2, 2) + \min(2, 4, 3, 2, 2) + \min(5, 3, 3) = 7$.
 
 So the answer is $7$.
+
 
 
 
