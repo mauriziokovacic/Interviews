@@ -3,7 +3,7 @@
 A city is represented in the form of a grid where the delivery centers are marked as $1$ and all other places are marked as $0$.
 
 Distance between two cells is defined as the maximum absolute distance between x-coordinates and y-coordinates.
-For example, distance between $(1, 2)$ and $(0, 4)$ is $max(|1 - 0|, |2 - 4|) = 2$.
+For example, distance between $(1, 2)$ and $(0, 4)$ is $\max(|1 - 0|, |2 - 4|) = 2$.
 The inconvenience of the grid is defined as the maximum distance of any place marked 0 from its nearest delivery center.
 
 We are planning to open a new delivery center to reduce the inconvenience of the grid.
@@ -90,5 +90,6 @@ $0$
 ### Explanation
 
 It is optimal to convert the only $0$ to $1$
+
 
 
