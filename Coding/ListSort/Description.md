@@ -13,4 +13,7 @@ struct DataEntry
 }
 ```
 
-The list must be sorted in alphabetical order. In case of equality, entries should be sorted by value. Assumes the input is always non null.
+The list must be sorted in alphabetical order.
+In case of equality, entries should be sorted by value.
+
+Assumes the input is always non null.
