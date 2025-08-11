@@ -1,33 +1,32 @@
 # Most Frequent Value
 
 You are given an implementation of a function:
-
-    int solution(int M, int A[], int N)
-
-that, given an integer M and an array A consisting of N non-negative integers, which are not greater than M, returns the value (or one of the values) that occurs most often in this array.
-
-For example, given `M = 3` and array A such that:
-
-    A[0] = 1
-    A[1] = 2
-    A[2] = 3
-    A[3] = 3
-    A[4] = 1
-    A[5] = 3
-    A[6] = 1
-
-the function may return 1 or 3.
+```
+int solution(int M, int A[], int N)
+```
+that, given an integer $M$ and an array $A$ consisting of $N$ non-negative integers, which are not greater than $M$, returns the value (or one of the values) that occurs most often in this array.
 
 The attached code is still **INCORRECT** for some inputs. Despite the error(s), the code may produce a correct answer for the example test cases. The goal of the exercise is to find and fix the bug(s) in the implementation. You can modify at most **FOUR** lines.
 
 Assume that:
-- N is an integer within the range [1, 200000]
-- M is an integer within the range [1, 10000]
-- each element of array A is an integer within the range [0, M]
+- $N$ is an integer within the range $[1, 200000]$
+- $M$ is an integer within the range $[1, 10000]$
+- each element of array $A$ is an integer within the range $[0, M]$
 
-In your solution, focus on correctness. The performance of your solution will
-not be the focus of the assessment.
+In your solution, focus on correctness. The performance of your solution will not be the focus of the assessment.
 
+## Example
+```
+M = 3
+A = [1, 2, 3, 3, 1, 3, 1]
+N = 7
+```
+
+### Expected output
+$1$ or $3$
+
+
+## Initial code
 ```
 #include <stdlib.h>
 
